@@ -154,7 +154,7 @@ class BoatPlay:
                     obstY = obstacle[2]
                     obstYR = obstY + 185
 
-                    if (obstYR - self.Players[2] >= - 15 and obstYR - self.Players[2] <= 400) and obstX == self.Players[1]:
+                    if (obstYR - self.Players[2] >= - 2 and obstYR - self.Players[2] <= 400) and obstX == self.Players[1]:
                         self.gameOver = True
                         break
 
@@ -173,7 +173,7 @@ class BoatPlay:
         self.gameCanvas.delete(self.Players[0])
         try:
             for obstacle in self.obstacles:
-                self.gameCanvas.delete(obstacle)
+                self.gameCanvas.delete(obstacle[0])
         except:
             pass
 
