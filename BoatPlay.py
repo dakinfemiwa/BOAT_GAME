@@ -154,7 +154,7 @@ class BoatPlay:
                     obstY = obstacle[2]
                     obstYR = obstY + 185
 
-                    if (obstYR - self.Players[2] >= - 2 and obstYR - self.Players[2] <= 400) and obstX == self.Players[1]:
+                    if (obstYR - self.Players[2] >= - 2 and obstYR - self.Players[2] < 400) and obstX == self.Players[1]:
                         self.gameOver = True
                         break
 
