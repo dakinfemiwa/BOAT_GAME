@@ -8,12 +8,13 @@ import random
 class BoatPlay:
     def __init__(self):
         self.title = "BOAT RACING"
-        self.background = "black"
+        self.background = "#282828"
         self.background2= "black"
         self.foreground = "white"
         self.background2 = "#7A7A7A"
+        self.background3 = "lightblue"
         self.pos = 0.6
-        self.bgPos = 10
+        self.bgPos = 1
         self.kayakPos = 400
         self.gameOver = False
         self.points = 0
@@ -28,15 +29,15 @@ class BoatPlay:
         self.file = Tk()
         self.file.attributes("-topmost", True)
         self.file.title(self.title)
-        self.file.geometry("1250x650+10+50")
+        self.file.geometry("1250x575+10+50")
         self.file.overrideredirect(1)
         self.file.config(bg=self.background)
 
-        self.exitButton = Button(self.file, text=" × ", command=lambda :self.close(), font="Arial 35", bd=0, background="black",foreground="white", cursor="hand2", justify="left")
+        self.exitButton = Button(self.file, text=" × ", command=lambda :self.close(), font="Arial 35", bd=0, background=self.background,foreground="white", cursor="hand2", justify="left")
         self.exitButton.config(activebackground="black", activeforeground="gray")
         self.exitButton.place(relx=.93, rely=-.02)
 
-        self.fileTitle = Label(self.file, text=self.title, background=self.background, font="Segoe 29")
+        self.fileTitle = Label(self.file, text=self.title, background=self.background, font="Segoe 29 bold")
         self.fileTitle.config(fg="white")
         self.fileTitle.place(relx=.0, rely=.025)
 
@@ -51,8 +52,11 @@ class BoatPlay:
 
         self.Players = [self.kayak, 625, self.kayakPos]
 
-        self.pointsLabel = Label(self.file, text=self.points, background=self.background, foreground="white", font="MSSansSerif 29 bold", width=50, anchor=E, justify="right")
-        self.pointsLabel.place(relx=.0, rely=.9)
+        self.pointsLabel = Label(self.file, text="|  POINTS: " + str(self.points), background=self.background, foreground="white", font="Segoe 14")
+        self.pointsLabel.place(relx=.225, rely=.05)
+
+        self.levelLabel =  Label(self.file, text="  LEVEL: " + str(self.multiplyer), background=self.background, foreground="white", font="Segoe 14")
+        self.levelLabel.place(relx=.75, rely=.05)
 
         self.file.bind("<Key>", lambda event:self.moveKayak(event))
 
@@ -64,9 +68,12 @@ class BoatPlay:
 
     def showPoints(self):
         while self.gameOver == False:
-            time.sleep(.025 / (2 ^ (self.multiplyer - 1)))
+            time.sleep(.025 / (2 ** (self.multiplyer - 1)))
             self.points += random.randint(1,3)
-            self.pointsLabel['text'] = self.points
+            self.pointsLabel['text'] = "|  POINTS: " + str(self.points)
+            if self.points >= (500 * (self.multiplyer ** 2)):
+                self.multiplyer += 1
+                self.levelLabel['text'] = "  LEVEL: " + str(self.multiplyer)
         if self.gameOver == True:
             return False
 
@@ -107,7 +114,12 @@ class BoatPlay:
 
     def startObstacles(self):
         while True and self.gameOver == False:
-            time.sleep(0.02)
+            if self.multiplyer < 5:
+                time.sleep(.02)
+            elif self.multiplyer < 10:
+                time.sleep(.0175)
+            else:
+                time.sleep(.0155)
 
             for o in range(0, len(self.obstacleImages)):
                 self.pic = PhotoImage(file=self.obstacleImages[o])
@@ -133,7 +145,13 @@ class BoatPlay:
             for obstacle in self.obstacles:
                 while obstacle[2] <=1250:
                     i = self.obstacles.index(obstacle)
-                    time.sleep(.02)
+                    if self.multiplyer < 5:
+                        time.sleep(.023)
+                    elif self.multiplyer < 10:
+                        time.sleep(.0185)
+                    else:
+                        time.sleep(.0125)
+
                     self.gameCanvas.move(obstacle[0], 0, 10)
                     self.obstacles[i][2] += 10
                         
@@ -158,17 +176,15 @@ class BoatPlay:
 
     def end(self):
         self.gameCanvas.delete(self.Players[0])
-        self.gameOverFrame = Frame(self.gameCanvas, background=self.background).place(relx=.35, rely=.35)
-        self.gameOverLabel = Label(self.gameOverFrame, text="GAME OVER", background=self.background, font="Verdana 40", foreground="white").place(relx=.4, rely=.4)
-        self.gameOverPoint = Label(self.gameOverFrame, text="Score: "+ str(self.points), background=self.background, font="Verdana 20", foreground="white")
-        self.gameOverPoint.place(relx=.475, rely=.5)
-        
-                    
+        try:
+            for obstacle in self.obstacles:
+                self.gameCanvas.delete(obstacle)
+        except:
+            pass
 
-    
-            
-            
-        
+        self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .4*650, text="GAME OVER\n"+"Score: "+ str(self.points), font="Verdana 40", fill="white", justify="center")
+
+     
 
 if __name__ == '__main__':
     BoatPlay = BoatPlay()
