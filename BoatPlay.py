@@ -19,8 +19,8 @@ class BoatPlay:
         self.points = 0
         self.multiplyer = 1
         self.lane = 2
-        self.obstacleImages = [['kayak.png'], ['kayak.png'],
-                               ['kayak.png'], ['kayak.png'], ['kayak.png']]
+        self.obstacleImages = [['kayakO1.png'], ['kayakO3.png'],
+                               ['kayakO5.png'],['kayakO2.png']]
         self.ObstaclePhImgs = []
         self.obstacles = []
                                
