@@ -63,12 +63,11 @@ class BoatPlay:
         threading.Thread(target=self.moveBackground, args=()).start()
         threading.Thread(target=self.showPoints, args=()).start()
         threading.Thread(target=self.startObstacles, args=()).start()
-        threading.Thread(target=self.moveObstacle, args=()).start()
         threading.Thread(target=self.file.mainloop(), args=()).start()
 
     def showPoints(self):
         while self.gameOver == False:
-            time.sleep(.025 / (2 ** (self.multiplyer - 1)))
+            time.sleep(.025 / (2 ** (self.multiplyer - 2)))
             self.points += random.randint(1,3)
             self.pointsLabel['text'] = "|  POINTS: " + str(self.points)
             if self.points >= (500 * (self.multiplyer ** 2)):
@@ -137,11 +136,7 @@ class BoatPlay:
             self.obstacles[len(self.obstacles) - 1].append(self.xDistan)
             self.obstacles[len(self.obstacles) - 1].append(self.yOValue)
 
-        if self.gameOver == True:
-            pass
 
-    def moveObstacle(self):
-        while True and self.gameOver == False:
             for obstacle in self.obstacles:
                 while obstacle[2] <=1250:
                     i = self.obstacles.index(obstacle)
