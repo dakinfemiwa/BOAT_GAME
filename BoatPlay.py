@@ -7,6 +7,8 @@ import random
 
 class BoatPlay:
     def __init__(self):
+        """Use the left and right keys to move.
+        Avoid the other boats."""
         self.title = "BOAT RACING"
         self.background = "#282828"
         self.background2= "black"
@@ -24,7 +26,9 @@ class BoatPlay:
                                ['kayakO5.png'],['kayakO2.png']]
         self.ObstaclePhImgs = []
         self.obstacles = []
-                               
+        self.ranLane = 0
+        self.ranLanPr = 0        
+
 
         self.file = Tk()
         self.file.attributes("-topmost", True)
@@ -93,6 +97,10 @@ class BoatPlay:
 
 
     def close(self):
+        self.gameOver = True
+        self.close2()
+
+    def close2(self):
         self.file.destroy()
 
     def moveBackground(self):
@@ -111,52 +119,80 @@ class BoatPlay:
             print(self.bgPos)
             self.imageLabel.place(relx=0, rely=self.bgPos)"""
 
+
+
     def startObstacles(self):
         while True and self.gameOver == False:
             if self.multiplyer < 5:
-                time.sleep(.02)
+                time.sleep(.0002)
             elif self.multiplyer < 10:
-                time.sleep(.0175)
+                time.sleep(.00075)
             else:
-                time.sleep(.0155)
+                time.sleep(.0125)
 
             for o in range(0, len(self.obstacleImages)):
                 self.pic = PhotoImage(file=self.obstacleImages[o])
                 self.ObstaclePhImgs.append(self.pic)
 
-            random.shuffle(self.ObstaclePhImgs)
 
-            self.yOValue = -100
+            for o in range(2):
+            
+                random.shuffle(self.ObstaclePhImgs)
 
-            self.ranLane = random.randint(1, 3)
-            self.xDistan = 25 + (300 * self.ranLane)
-            self.obstacle = self.gameCanvas.create_image(self.xDistan, -100, image=self.ObstaclePhImgs[0])
-            self.obstacles.append([])
-            self.obstacles[len(self.obstacles) - 1].append(self.obstacle)
-            self.obstacles[len(self.obstacles) - 1].append(self.xDistan)
-            self.obstacles[len(self.obstacles) - 1].append(self.yOValue)
+                self.yOValue = -100
+
+                while self.ranLane == self.ranLanPr:
+                    self.ranLane = random.randint(1, 3)
+                
+                
+                self.ranLanPr = self.ranLane
+                self.xDistan = 25 + (300 * self.ranLane)
+                self.obstacle = self.gameCanvas.create_image(self.xDistan, -100, image=self.ObstaclePhImgs[0])
+                self.obstacles.append([])
+                self.obstacles[len(self.obstacles) - 1].append(self.obstacle)
+                self.obstacles[len(self.obstacles) - 1].append(self.xDistan)
+                self.obstacles[len(self.obstacles) - 1].append(self.yOValue)
 
 
             for obstacle in self.obstacles:
                 while obstacle[2] <=1250:
                     i = self.obstacles.index(obstacle)
-                    if self.multiplyer < 5:
-                        time.sleep(.023)
-                    elif self.multiplyer < 10:
-                        time.sleep(.0185)
-                    else:
-                        time.sleep(.0125)
+                    if True:                            
+                        if self.multiplyer < 5:
+                            time.sleep(.023)
+                        elif self.multiplyer < 10:
+                            time.sleep(.0195)
+                        elif self.multiplyer < 12:
+                            time.sleep(.005)
 
                     self.gameCanvas.move(obstacle[0], 0, 10)
                     self.obstacles[i][2] += 10
+                    choice = random.randint(0,1)
+
+                    if choice == 1:
+                        try:
+                            pass
+                            #ranT = random.randint(-20, 20)
+                            #time.sleep(.0001 * ranT)
+                            #self.gameCanvas.move(self.obstacles[i+1][0], 0, 10)
+                            #self.obstacles[i+1][2] += 10
+                        except:
+                            pass
                         
                     obstX = obstacle[1]
                     obstY = obstacle[2]
+                    #obsTX = self.obstacles[i+1][1]
+                    #obsTY = self.obstacles[i+1][2]
                     obstYR = obstY + 185
+                    #obsTYR = obsTY + 185
 
-                    if (obstYR - self.Players[2] >= - 2 and obstYR - self.Players[2] < 395) and obstX == self.Players[1]:
+                    if (obstYR - self.Players[2] >= - 2 and obstYR - self.Players[2] < 350) and obstX == self.Players[1]:
                         self.gameOver = True
                         break
+
+                    """if (obsTYR - self.Players[2] >= - 2 and obsTYR - self.Players[2] < 350) and obsTX == self.Players[1]:
+                        self.gameOver = True
+                        break  """                  
 
                 if self.gameOver == True:
                     break
@@ -176,10 +212,20 @@ class BoatPlay:
                 self.gameCanvas.delete(obstacle[0])
         except:
             pass
+        with open("highScore.txt", "r")as highScoreRead:
+            highScoreRd = highScoreRead.readline()
+            if int(highScoreRd) < self.points:
+                self.newHighScore = True
+            else:
+                self.newHighScore = False
 
-        self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .4*650, text="GAME OVER\n"+"Score: "+ str(self.points), font="Verdana 40", fill="white", justify="center")
+        self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .4*650, text="GAME OVER\n", font="Verdana 40", fill="white", justify="center")
+        self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .45*650, text="Score: "+ str(self.points), font="Verdana 20", fill="white", justify="center")
+        if self.newHighScore == True:
+             with open("highScore.txt", "w")as highScoreRead:
+                highScoreRead.write(str(self.points))
+             self.highScoreLabel = self.gameCanvas.create_text(.5*1250, .65*650, text="NEW HIGH SCORE ", font="Verdana 20", fill="white", justify="center")
 
-     
-
+                
 if __name__ == '__main__':
     BoatPlay = BoatPlay()
