@@ -212,7 +212,7 @@ class BoatPlay:
                 self.gameCanvas.delete(obstacle[0])
         except:
             pass
-        with open("highScore.txt", "r")as highScoreRead:
+        with open("highScore.pdf", "r")as highScoreRead:
             highScoreRd = highScoreRead.readline()
             if int(highScoreRd) < self.points:
                 self.newHighScore = True
@@ -222,7 +222,7 @@ class BoatPlay:
         self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .4*650, text="GAME OVER\n", font="Verdana 40", fill="white", justify="center")
         self.gameOverLabel = self.gameCanvas.create_text(.5*1250, .45*650, text="Score: "+ str(self.points), font="Verdana 20", fill="white", justify="center")
         if self.newHighScore == True:
-             with open("highScore.txt", "w")as highScoreRead:
+             with open("highScore.pdf", "w")as highScoreRead:
                 highScoreRead.write(str(self.points))
              self.highScoreLabel = self.gameCanvas.create_text(.5*1250, .65*650, text="NEW HIGH SCORE ", font="Verdana 20", fill="white", justify="center")
 
